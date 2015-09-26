@@ -3,16 +3,11 @@
 - name: Create balancer server virtual hosts
   template: src={{ item }}.j2 dest=/etc/nginx/conf.d/{{ item }} owner=root group=root mode=0755
   with_items:
-    - _is.conf
     - _esb.conf
-    - _das.conf
-    - _ansible.conf
 
 - name: Copy certificates
   copy: src={{ item }} dest=/etc/nginx/ssl/ owner=root group=root mode=0755
   with_items: 
-    - server.key
-    - server.crt 
-    - server.key.org
-    - server.csr
-    - dhparams.pem
+    - nginx.key
+    - nginx.crt 
+    - dhparam.pem
