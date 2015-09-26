@@ -27,6 +27,8 @@
 - name: Verify machine hostname to be correctly set
   hostname: name={{ inventory_hostname }}
 
+- lineinfile: dest=/etc/hosts regexp='.*{{ inventory_hostname }}$' insertafter="^127\.0\.0\.1(.*)localhost" line="{{ ansible_eth0['ipv4']['address'] }} {{ inventory_hostname }}" state=present
+
 - name: Change WSO2 installation directory ownership (1)
   file: path={{ WSO2CarbonDirectory }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=directory recurse=yes
 

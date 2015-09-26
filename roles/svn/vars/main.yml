@@ -24,7 +24,7 @@
 #
 # ----------------------------------------------------------------------------
 #
-FQDN: "svn.{{ Environment }}{{ Domain }}"
+FQDN: "{{ inventory_hostname }}"
 SVNRepository: /var/www/svn
 #
 #
