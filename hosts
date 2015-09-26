@@ -22,7 +22,7 @@
 #
 # ----------------------------------------------------------------------------
 #
-[ELB]
+[LB]
 lb.dev.iello.ro		ansible_ssh_host=10.13.42.15	ansible_connection=ssh	ansible_ssh_user=root
 
 [SVN]
