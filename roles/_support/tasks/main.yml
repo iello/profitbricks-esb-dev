@@ -1,0 +1,139 @@
+---
+# ----------------------------------------------------------------------------
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+#
+#  ------------------------- Created by -------------------------------------- 
+#
+#  Name: Gabriel Popa
+#  Company: Iello-Dev srl
+#  Country: Romania 
+#  Email: contact@iello.ro
+#
+#
+# ----------------------------------------------------------------------------
+#
+- set_fact:
+     IssueFolder: '{{ JiraIssue | replace("-", "_") }}_{{ ansible_date_time.date | replace("-", "_") }}'
+
+- set_fact:
+     IssueHome: "/tmp/{{ IssueFolder }}"
+
+- name: Remove issue temporary folder
+  file: path={{ IssueHome }} state=absent
+
+- name: Create a ticket folder
+  file: path={{ IssueHome }} state=directory recurse=yes
+
+#
+# Prepare log files
+#
+
+- name: Create logs folder
+  file: path={{ IssueHome }}/logs state=directory
+
+- name: Copy log files for support
+  command: creates="{{ IssueHome }}/logs/{{ item }}.log" cp {{ WSO2CarbonHome }}/repository/logs/{{ item }}.log {{ IssueHome }}/logs/
+  with_items:
+    - wso2carbon
+
+#
+# Prepare configuration files
+#
+
+- name: Create conf folder
+  file: path={{ IssueHome }}/conf state=directory
+
+- name: Create conf/datasources folder
+  file: path={{ IssueHome }}/conf/datasources state=directory
+
+- name: Create conf/security folder
+  file: path={{ IssueHome }}/conf/security state=directory
+
+- name: Create conf/axis2 folder
+  file: path={{ IssueHome }}/conf/axis2 state=directory
+
+- name: Create conf/tomcat folder
+  file: path={{ IssueHome }}/conf/tomcat state=directory
+
+- name: Copy configuration file for support (carbon.xml)
+  command: creates="{{ IssueHome }}/conf/carbon.xml" cp {{ WSO2CarbonHome }}/repository/conf/carbon.xml {{ IssueHome }}/conf/
+
+- name: Copy configuration file for support (user-mgt.xml)
+  command: creates="{{ IssueHome }}/conf/user-mgt.xml" cp {{ WSO2CarbonHome }}/repository/conf/user-mgt.xml {{ IssueHome }}/conf/
+
+- name: Copy configuration file for support (master-datasources.xml)
+  command: creates="{{ IssueHome }}/conf/datasources/master-datasources.xml" cp {{ WSO2CarbonHome }}/repository/conf/datasources/master-datasources.xml {{ IssueHome }}/conf/datasources/
+
+- name: Copy configuration file for support (axis2.xml)
+  command: creates="{{ IssueHome }}/conf/axis2/axis2.xml" cp {{ WSO2CarbonHome }}/repository/conf/axis2/axis2.xml {{ IssueHome }}/conf/axis2/
+
+- name: Copy configuration file for support (authenticators.xml)
+  command: creates="{{ IssueHome }}/conf/security/authenticators.xml" cp {{ WSO2CarbonHome }}/repository/conf/security/authenticators.xml {{ IssueHome }}/conf/security/
+
+- name: Copy configuration file for support (catalina-server.xml)
+  command: creates="{{ IssueHome }}/conf/tomcat/catalina-server.xml" cp {{ WSO2CarbonHome }}/repository/conf/tomcat/catalina-server.xml {{ IssueHome }}/conf/tomcat/
+
+- name: Copy configuration file for support (tenant-axis2.xml)
+  command: creates="{{ IssueHome }}/conf/axis2/tenant-axis2.xml" cp {{ WSO2CarbonHome }}/repository/conf/axis2/tenant-axis2.xml {{ IssueHome }}/conf/axis2/
+
+#
+# Obfuscating
+# 
+- name: Obfuscate secret values (carbon.xml)
+  command: sed -i "s/\(<{{ item.tag }}.*>\).*\(<\/{{ item.tag }}.*\)/\1{{ item.value }}\2/" {{ IssueHome }}/conf/carbon.xml
+  with_items:
+    - { tag: 'Password', value: '************' }
+    - { tag: 'KeyPassword', value: '************' }
+
+- name: Obfuscate secret values (user-mgt.xml)
+  command: sed -i "s/\(<{{ item.tag }}.*>\).*\(<\/{{ item.tag }}.*\)/\1{{ item.value }}\2/" {{ IssueHome }}/conf/user-mgt.xml
+  with_items:
+    - { tag: 'UserName', value: '************' }
+    - { tag: 'Password', value: '************' }
+
+- name: Obfuscate secret values (master-datasources.xml)
+  command: sed -i "s/\(<{{ item.tag }}.*>\).*\(<\/{{ item.tag }}.*\)/\1{{ item.value }}\2/" {{ IssueHome }}/conf/datasources/master-datasources.xml
+  with_items:
+    - { tag: 'username', value: '************' }
+    - { tag: 'password', value: '************' }
+
+- name: Obfuscate secret values (axis.xml)
+  command: sed -i "s/\(<{{ item.tag }}.*>\).*\(<\/{{ item.tag }}.*\)/\1{{ item.value }}\2/" {{ IssueHome }}/conf/datasources/master-datasources.xml
+  with_items:
+    - { tag: 'Password', value: '************' }
+    - { tag: 'KeyPassword', value: '************' }
+
+- name: Obfuscate secret values (catalina-server.xml)
+  command: sed -i "s/\(<{{ item.tag }}.*>\).*\(<\/{{ item.tag }}.*\)/\1{{ item.value }}\2/" {{ IssueHome }}/conf/tomcat/catalina-server.xml
+  with_items:
+    - { tag: 'keystorePass', value: '************' }
+
+#
+# Zipping
+#
+- name: Archive all
+  shell: tar -zcvf {{ inventory_hostname }}.tar.gz {{ IssueFolder }} chdir=/tmp/ creates=/tmp/{{ inventory_hostname }}_{{ IssueFolder }}.tar.gz
+
+- fetch: src=/tmp/{{ inventory_hostname }}.tar.gz dest=~/ flat=yes
+
+- name: Remove archive after transfer
+  file: path=/tmp/{{ inventory_hostname }}.tar.gz state=absent force=yes
+
+- name: Remove issue temporary folder
+  file: path={{ IssueHome }} state=absent
+
+#
+#
+# EOF: profitbricks-esb-dev/roles/_support/tasks/main.yml

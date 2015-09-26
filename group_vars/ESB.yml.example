@@ -1,0 +1,74 @@
+---
+# ----------------------------------------------------------------------------
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+#
+#  ------------------------- Created by -------------------------------------- 
+#
+#  Name: Gabriel Popa
+#  Company: Iello-Dev srl
+#  Country: Romania 
+#  Email: contact@iello.ro
+#
+#
+# ----------------------------------------------------------------------------
+#
+SharedConfigGovernance: 'true'
+#
+ClusterPortPrefix: 41
+ClusterPort: "{{ ClusterPortPrefix }}00"
+#
+# Identity
+AdminUserName: '<admin username>'
+AdminPassword: '<admin password>'
+# Please do not change the username
+LocalRegistryUser: 'wso2carbon'
+# But change the default password
+LocalRegistryPass: '<new local registry pass>'
+# Remote MsSQL database
+SQLRegistryDBName: '{{ DB4GREG }}'
+SQLIdentityDBName: '{{ DB4IS }}'
+# User Store database
+UserStoreDatasourceName: 'WSO2_USER_STORE_DB'
+UserStoreJndiConfig: 'WSO2UsersDB'
+DatabaseUserstoreURL: "jdbc:mariadb:failover://{% for host in groups['MARIA'] -%}{{ hostvars[host]['ansible_ssh_host'] }}{% if not loop.last -%},{% endif -%}{% endfor -%}/{{ SQLIdentityDBName }}"
+DatabaseUserstoreUser: '{{ DB4ISUser }}'
+DatabaseUserstorePass: '{{ DB4ISPassword }}'
+DatabaseUserStoreDriver: 'org.mariadb.jdbc.Driver'
+# Local Registry Database
+LocalRegistryURL: 'jdbc:h2:{{ WSO2CarbonHome }}/repository/database/wso2_n{{ node }}_{{ Environment|replace(".", "_") }}_db'
+LocalRegistryDatasourceName: 'WSO2_CARBON_DB'
+LocalRegistryJndiConfig: 'WSO2CarbonDB'
+DatabaseLocalRegistryURL: '{{ LocalRegistryURL }};DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000'
+DatabaseLocalRegistryUser: '{{ LocalRegistryUser }}'
+DatabaseLocalRegistryPass: '{{ LocalRegistryPass }}'
+DatabaseLocalRegistryDriver: 'org.h2.Driver'
+# Registry
+RegistryInstanceid: '{{ Alias }}_instance'
+RegistryIdentifier: 'ESB'
+DatabaseRegistryURL: "jdbc:mariadb:failover://{% for host in groups['MARIA'] -%}{{ hostvars[host]['ansible_ssh_host'] }}{% if not loop.last -%},{% endif -%}{% endfor -%}/{{ SQLRegistryDBName }}"
+DatabaseRegistryUser: '{{ DB4GREGUser }}'
+DatabaseRegistryPass: '{{ DB4GREGPassword }}'
+DatabaseRegistryDriver: 'org.mariadb.jdbc.Driver'
+# Https Keystore
+KeyAlias: 'wso2carbon'
+Keystore: 'wso2carbon.jks'
+KeystorePassword: '<keystore password>'
+KeyPassword: '<key password>'
+# Client-truststore password and new password
+TrustStorePass: 'wso2carbon'
+TrustStorePassNew: '<new truststore password>'
+#
+#
+# EOF: profitbricks-esb-dev/group_vars/ESB.yml

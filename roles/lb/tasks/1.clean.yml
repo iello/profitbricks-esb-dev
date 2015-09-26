@@ -1,0 +1,30 @@
+---
+#
+- name: Run apt-get remove nginx-plus to remove nginx-plus package
+  apt: name={{ item }} state=absent force=yes purge=yes
+  with_items:
+    - nginx-plus
+  ignore_errors: true
+
+- name: autoremove unused packages
+  command: apt-get -y autoremove
+
+- name: Remove 90nginx from /etc/apt/apt.conf.d
+  file: path=/etc/apt/apt.conf.d/nginx-repo.crt owner=root group=root mode=0755 state=absent
+  ignore_errors: true
+
+- name: Remove apt-key nginx_signing.key
+  apt_key: url=http://nginx.org/keys/nginx_signing.key state=absent
+  ignore_errors: true
+
+- name: Remove CA.crt nginx-repo.key and nginx-repo.crt files to /etc/ssl/nginx/ directory
+  file: path=/etc/ssl/nginx owner=root group=root mode=0755 state=absent
+  ignore_errors: true
+
+- name: Remove virtual hosts directory directory
+  file: path=/etc/nginx/conf.d owner=root group=root mode=0755 state=absent
+  ignore_errors: true
+
+#
+#
+# EOF profitbricks-esb-dev/roles/lb/tasks/1.clean.yml

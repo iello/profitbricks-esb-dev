@@ -1,0 +1,74 @@
+---
+# ----------------------------------------------------------------------------
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+#
+#  ------------------------- Created by -------------------------------------- 
+#
+#  Name: Gabriel Popa
+#  Company: Iello-Dev srl
+#  Country: Romania 
+#  Email: contact@iello.ro
+#
+#
+# ----------------------------------------------------------------------------
+# Environment & Domain
+Environment: 'dev.'
+Domain: 'iello.ro'
+# Specific
+Nickname: 'wso2'
+JAVA_HOME: '/usr/lib/jvm/jdk1.7.0_80'
+CarbonServicesAlias: 'api-'
+MySQLOwner: 'mysql'
+MySQLGroup: 'mysql'
+# Global variables
+WSO2CarbonTarget: '/usr/lib/'
+# Other
+WSO2SymLink: 'wso2server'
+# Folders
+WSO2CarbonHome: '{{ WSO2CarbonTarget }}{{ WSO2SymLink }}'
+# User
+WSO2Owner: 'wso2'
+WSO2Group: 'wso2'
+# Services
+WSO2Service: 'wso2server'
+# Daemon
+WSO2Daemon: 'wso2server.sh'
+# SVN Deployment syncronizer
+DevSVN: 'Development'
+ArtifactsSVN: 'Deployment'
+SvnUrl: 'http://<svn server ip>/svn/{{ ArtifactsSVN }}/{{ Alias }}/'
+SvnUser: '<svn user>'
+SvnPassword: '<svn pasword>'
+# Shared Registry
+RegistryDataSource: 'WSO2RegistryDB'
+RegistryDBConfig: 'sharedregistry'
+RegistryDatabase: 'REGISTRY_DB'
+RegistryURL: 'https://{{ HostName }}:9443/registry'
+# Registry Keystore
+RegKeyAlias: 'wso2carbon'
+RegKeystore: 'wso2carbon.jks'
+RegKeystorePassword: 'wso2carbon'
+RegKeyPassword: 'wso2carbon'
+# Databases
+DB4IS: 'userStoreDB'
+DB4ISUser: '<identity user>'
+DB4ISPassword: '<identity password>'
+#
+DB4GREG: 'govRegistryDB'
+DB4GREGUser: '<registry user>'
+DB4GREGPassword: '<registry password>'
+#
+#
+# EOF: profitbricks-esb-dev/group_vars/all.yml

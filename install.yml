@@ -1,0 +1,62 @@
+---
+# ----------------------------------------------------------------------------
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+#
+#  ------------------------- Created by -------------------------------------- 
+#
+#  Name: Gabriel Popa
+#  Company: Iello-Dev srl
+#  Country: Romania 
+#  Email: contact@iello.ro
+#
+#
+# ----------------------------------------------------------------------------
+#
+  - name: Install Prerequisites
+    hosts: '{{ hosts | default("PRQ") }}'
+
+    roles:
+      - _java
+#      - _firewall
+    tags:
+      - PRQ
+
+  - name: Install SVN Server
+    hosts: '{{ hosts | default("SVN") }}'
+
+    roles:
+      - svn
+    tags:
+      - SVN
+
+  - name: Install Balancer
+    hosts: '{{ hosts | default("LB") }}'
+
+    roles:
+      - lb
+    tags:
+      - LB
+
+  - name: Install Enterprise Service Bus
+    hosts: '{{ hosts | default("ESB") }}'
+
+    roles:
+      - esb
+
+    tags:
+      - ESB
+#
+#
+# EOF: profitbricks-esb-dev/install.yml

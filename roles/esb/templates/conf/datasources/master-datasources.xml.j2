@@ -1,0 +1,112 @@
+<datasources-configuration xmlns:svns="http://org.wso2.securevault/configuration">
+  
+    <providers>
+        <provider>org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader</provider>
+    </providers>
+  
+    <datasources>
+      
+        <datasource>
+            <name>{{ LocalRegistryDatasourceName }}</name>
+            <description>The datasource used for config and user manager</description>
+            <jndiConfig>
+                <name>jdbc/{{ LocalRegistryJndiConfig }}</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>{{ DatabaseLocalRegistryURL }}</url>
+                    <username>{{ DatabaseLocalRegistryUser }}</username>
+                    <password>{{ DatabaseLocalRegistryPass }}</password>
+                    <driverClassName>{{ DatabaseLocalRegistryDriver }}</driverClassName>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                    <defaultAutoCommit>false</defaultAutoCommit>
+                </configuration>
+            </definition>
+        </datasource>
+
+        <datasource>
+            <name>{{ UserStoreDatasourceName }}</name>
+            <description>The datasource used for users</description>
+            <jndiConfig>
+                <name>jdbc/{{ UserStoreJndiConfig }}</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>{{ DatabaseUserstoreURL }}</url>
+                    <username>{{ DatabaseUserstoreUser }}</username>
+                    <password>{{ DatabaseUserstorePass }}</password>
+                    <driverClassName>{{ DatabaseUserStoreDriver }}</driverClassName>
+                    <maxActive>1000</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                </configuration>
+            </definition>
+        </datasource>
+
+        {% if SharedConfigGovernance == 'true' -%}
+        <datasource>
+            <name>{{ RegistryDatabase }}</name>
+            <description>The datasource used for registry</description>
+            <jndiConfig>
+                <name>jdbc/{{ RegistryDataSource }}</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>{{ DatabaseRegistryURL }}</url>
+                    <username>{{ DatabaseRegistryUser }}</username>
+                    <password>{{ DatabaseRegistryPass }}</password>
+                    <driverClassName>{{ DatabaseRegistryDriver }}</driverClassName>
+                    <maxActive>1000</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                </configuration>
+            </definition>
+        </datasource>
+        {% endif -%}
+
+        <!-- For an explanation of the properties, see: http://people.apache.org/~fhanik/jdbc-pool/jdbc-pool.html -->
+        <!--datasource>
+            <name>SAMPLE_DATA_SOURCE</name>
+            <jndiConfig>
+                <name></name>
+                <environment>
+                    <property name="java.naming.factory.initial"></property>
+                    <property name="java.naming.provider.url"></property>
+                </environment>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+
+                    <defaultAutoCommit></defaultAutoCommit>
+                    <defaultReadOnly></defaultReadOnly>
+                    <defaultTransactionIsolation>NONE|READ_COMMITTED|READ_UNCOMMITTED|REPEATABLE_READ|SERIALIZABLE</defaultTransactionIsolation>
+                    <defaultCatalog></defaultCatalog>
+                    <username></username>
+                    <password svns:secretAlias="WSO2.DB.Password"></password>
+                    <maxActive></maxActive>
+                    <maxIdle></maxIdle>
+                    <initialSize></initialSize>
+                    <maxWait></maxWait>
+
+                    <dataSourceClassName>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</dataSourceClassName>
+                    <dataSourceProps>
+                        <property name="url">jdbc:mysql://localhost:3306/Test1</property>
+                        <property name="user">root</property>
+                        <property name="password">123</property>
+                    </dataSourceProps>
+
+                </configuration>
+            </definition>
+        </datasource-->
+
+    </datasources>
+
+</datasources-configuration>

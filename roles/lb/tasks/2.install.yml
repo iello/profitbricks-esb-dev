@@ -1,0 +1,43 @@
+---
+#
+- name: Create /etc/ssl/nginx directory
+  file: path=/etc/ssl/nginx state=directory owner=root group=root mode=0755
+
+- name: Move CA.crt nginx-repo.key and nginx-repo.crt files to /etc/ssl/nginx/ directory
+  copy: src={{ item }} dest=/etc/ssl/nginx/ owner=root group=root mode=0755
+  with_items: 
+    - CA.crt 
+    - nginx-repo.key
+    - nginx-repo.crt
+
+- name: Run wget http://nginx.org/keys/nginx_signing.key and sudo apt-key add nginx_signing.key
+  apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
+
+- name: Run apt-get install apt-transport-https libgnutls26 libcurl3-gnutls
+  action: apt pkg={{ item }} state=installed
+  with_items:
+    - apt-transport-https
+    - libgnutls26
+    - libcurl3-gnutls
+
+- name: Run printf "deb https://plus-pkgs.nginx.com/ubuntu `lsb_release -cs` nginx-plus\n" >/etc/apt/sources.list.d/nginx-plus.list
+  shell: printf "deb https://plus-pkgs.nginx.com/ubuntu `lsb_release -cs` nginx-plus\n" >/etc/apt/sources.list.d/nginx-plus.list
+
+- name: Copy 90nginx to /etc/apt/apt.conf.d
+  copy: src=90nginx dest=/etc/apt/apt.conf.d owner=root group=root mode=0755
+
+- name: Run apt-get install nginx-plus packages
+  apt: 
+    name: "{{ item }}" 
+    state: latest 
+    update_cache: yes
+  with_items:
+    - expect
+    - nginx-plus
+    - nginx-ha-keepalived
+
+- name: Ensure nginx-plus service is enabled for startup
+  service: name=nginx enabled=yes state=started
+#
+#
+# EOF profitbricks-esb-dev/roles/lb/tasks/2.install.yml

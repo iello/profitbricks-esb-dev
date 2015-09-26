@@ -1,0 +1,53 @@
+---
+# ----------------------------------------------------------------------------
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+#
+#  ------------------------- Created by -------------------------------------- 
+#
+#  Name: Gabriel Popa
+#  Company: Iello-Dev srl
+#  Country: Romania 
+#  Email: contact@iello.ro
+#
+#
+# ----------------------------------------------------------------------------
+#
+- name: Generate htpassword
+  htpasswd: path=/etc/subversion/passwd name={{ SvnUser }} password={{ SvnPassword }} owner=root group=www-data mode=0640
+
+- name: Copy subversion configuration file
+  template: >
+    src=subversion.conf.j2
+    dest=/etc/apache2/sites-available/svnserver.conf
+    owner=www-data
+    group=www-data
+
+- name: Set ownership for environment repository
+  command: >
+    chown -R www-data:www-data {{ SVNRepository }}
+
+- name: Set apache port for IPV4
+  template: src=ports.conf.j2 dest=/etc/apache2/ports.conf owner=www-data group=www-data
+
+- name: Enable Apache DAV
+  command: a2enmod dav_svn
+  notify: restart apache
+
+- name: Enable Apache SVN
+  command: /usr/sbin/a2ensite svnserver creates=/etc/apache2/sites-enabled/svnserver
+  notify: restart apache
+#
+#
+# EOF: profitbricks-esb-dev/roles/svn/tasks/3.config.yml

@@ -1,0 +1,92 @@
+---
+# ----------------------------------------------------------------------------
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+#
+#  ------------------------- Created by -------------------------------------- 
+#
+#  Name: Gabriel Popa
+#  Company: Iello-Dev srl
+#  Country: Romania 
+#  Email: contact@iello.ro
+#
+#
+# ----------------------------------------------------------------------------
+#
+- name: Change carbon file 
+  template: src=conf/carbon.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/carbon.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change datasource file 
+  template: src=conf/datasources/master-datasources.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/datasources/master-datasources.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change registry file 
+  template: src=conf/registry.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/registry.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change authenticators file 
+  template: src=conf/security/authenticators.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/security/authenticators.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change catalina-server management file 
+  template: src=conf/tomcat/catalina-server.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/tomcat/catalina-server.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+#
+# Secure vault
+- name: Change cipher text file 
+  template: src=conf/security/cipher-text.properties.j2 dest={{ WSO2CarbonHome }}/repository/conf/security/cipher-text.properties owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change cipher text file 
+  template: src=conf/security/cipher-tool.properties.j2 dest={{ WSO2CarbonHome }}/repository/conf/security/cipher-tool.properties owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change secret conf file 
+  template: src=conf/security/secret-conf.properties.j2 dest={{ WSO2CarbonHome }}/repository/conf/security/secret-conf.properties owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change sec policy file 
+  template: src=conf/sec.policy.j2 dest={{ WSO2CarbonHome }}/repository/conf/sec.policy owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Copy expect cipher tool script
+  template: src=expect/run-ciphertool.sh.j2 dest={{ WSO2CarbonHome }}/bin/run-ciphertool.sh owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+
+- name: Copy expect cipher configure script
+  template: src=expect/run-cipherconfigure.sh.j2 dest={{ WSO2CarbonHome }}/bin/run-cipherconfigure.sh owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+
+- name: Copy temporary password for first startup
+  template: src=expect/password-persist.j2 dest={{ WSO2CarbonHome }}/password-persist owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+#
+- name: Change axis2 file 
+  template: src=conf/axis2/axis2.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/axis2/axis2.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change axis2_blocking_client file 
+  template: src=conf/axis2/axis2_blocking_client.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/axis2/axis2_blocking_client.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change tenant-axis2 file 
+  template: src=conf/axis2/tenant-axis2.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/axis2/tenant-axis2.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+# - name: Change identity file 
+#   template: src=conf/identity.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/identity.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change user management file 
+  template: src=conf/user-mgt.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/user-mgt.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+# - name: Change message tracer file 
+#   template: src=conf/etc/message-tracer-config.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/etc/message-tracer-config.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change daemon file to add node as worker or manager
+  template: src=daemon/wso2server.sh.j2 dest={{ WSO2CarbonHome }}/bin/wso2server.sh owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+# - name: Change log4j file 
+#   template: src=conf/log4j.properties.j2 dest={{ WSO2CarbonHome }}/repository/conf/log4j.properties owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Change nhttp.properties file 
+  template: src=conf/nhttp.properties.j2 dest={{ WSO2CarbonHome }}/repository/conf/nhttp.properties owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+#
+#
+# EOF: profitbricks-esb-dev/roles/esb/tasks/3.config.yml

@@ -1,0 +1,9 @@
+#!/usr/bin/expect
+spawn bash -lc "cd {{ WSO2CarbonHome }}/bin/ && ./ciphertool.sh"
+expect "Please Enter Primary KeyStore Password of Carbon Server :"
+send "{{ KeystorePassword }}\r"
+expect "Enter Plain text value :"
+send "{{ AdminPassword }}\r"
+expect "Please Enter value Again :"
+send "{{ AdminPassword }}\r"
+expect eof

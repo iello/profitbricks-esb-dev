@@ -1,0 +1,17 @@
+---
+#
+- include_vars: firewall.yml
+#
+# Clean previous installation if "Setup" variable request it
+- include: 1.clean.yml
+  when: fromScratch
+
+# Install WSO2
+- include: 2.install.yml
+  when: fromScratch
+
+# Configure WSO2
+- include: 3.config.yml
+
+# Configure machine parameters
+- include: 4.machine.yml

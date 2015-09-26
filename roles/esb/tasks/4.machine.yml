@@ -1,0 +1,137 @@
+---
+# ----------------------------------------------------------------------------
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+#
+#  ------------------------- Created by -------------------------------------- 
+#
+#  Name: Gabriel Popa
+#  Company: Iello-Dev srl
+#  Country: Romania 
+#  Email: contact@iello.ro
+#
+#
+# ----------------------------------------------------------------------------
+#
+- name: Verify machine hostname to be correctly set
+  hostname: name={{ inventory_hostname }}
+
+- name: Change WSO2 installation directory ownership (1)
+  file: path={{ WSO2CarbonDirectory }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=directory recurse=yes
+
+- name: Change WSO2 installation directory ownership (2)
+  shell: chown -R {{ WSO2Owner }}:{{ WSO2Group }} {{ WSO2CarbonDirectory }}
+
+- name: Change WSO2 installation directory ownership (3)
+  shell: chown {{ WSO2Owner }}:{{ WSO2Group }} {{ WSO2CarbonHome }}
+
+# Secure Vault - - - - - - - - - - - - - - - - - - - - - - -
+- name: Run Secure Vault activation script
+  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/bin/ && ./run-ciphertool.sh'"
+  remote_user: "{{ WSO2Owner }}"
+
+- name: Run Secure Vault configuration script
+  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/bin/ && ./run-cipherconfigure.sh'"
+# #
+- name: Delete the Secure Vault activation script file
+  shell: rm {{ WSO2CarbonHome }}/bin/run-ciphertool.sh
+
+- name: Delete the Secure Vault configuration script file
+  shell: rm {{ WSO2CarbonHome }}/bin/run-cipherconfigure.sh
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#
+# Change local registry database - H2 default wso2carbon user password
+# for security reasons
+# - - - - - - - - - - - - - - -
+- name: Transfer H2 password changing sql file
+  template: src=h2/h2pass.sql.j2 dest={{ WSO2CarbonHome }}/repository/database/h2pass.sql owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Run script for changing local registry H2 password
+  command: bash -lc 'cd {{ WSO2CarbonHome }}/repository/components/plugins/ && java -cp h2-*.jar org.h2.tools.RunScript -url {{ LocalRegistryURL }} -user wso2carbon -password wso2carbon -script {{ WSO2CarbonHome }}/repository/database/h2pass.sql' 
+
+- name: Delete the H2 script file, as no needed anymore
+  shell: rm {{ WSO2CarbonHome }}/repository/database/h2pass.sql
+
+# - - - - - - - - - - - - - - -
+- name: Change client-trustore password
+  command: bash -lc 'cd {{ WSO2CarbonHome }}/repository/resources/security/ && keytool -storepasswd -keystore client-truststore.jks -storepass {{ TrustStorePass }} -new {{ TrustStorePassNew }} -noprompt' 
+#
+- name: Start WSO2 instance first time with -Dsetup ( Manager )
+  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/{{ WSO2Daemon }} start -Dsetup'"
+  when: fromScratch and type == 'manager'
+
+- name: Wait for WSO2 to start for the first time ( Manager )
+  wait_for: delay=5 path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=org.wso2.carbon.ui.internal.CarbonUIServiceComponent
+  when: fromScratch and type == 'manager'
+
+- name: Start WSO2 servers ( Workers )
+  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/{{ WSO2Daemon }} start'"
+  when: fromScratch and type == 'worker'
+
+- name: Wait for servers to start ( Workers )
+  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=org.wso2.carbon.ui.internal.CarbonUIServiceComponent
+  when: fromScratch and type == 'worker'
+
+- name: Wait for servers to synchronize ( Workers )
+  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex="Deploying\ Web service:\ Version.aar"
+  when: fromScratch and type == 'worker'
+
+- name: Stop WSO2 servers
+  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/{{ WSO2Daemon }} stop'"
+  when: fromScratch
+
+- name: Wait for WSO2 setup to completely stop
+  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=Halting
+  when: fromScratch
+#  
+# Tunning for performance
+#
+- name: Modify environment variables setup 
+  template: src=performance/java.sh.j2 dest=/etc/profile.d/java.sh owner=root group=root mode=0755
+
+- name: Java environment variables setup
+  shell: >
+    executable=/bin/bash source /etc/profile.d/java.sh;
+
+- name: Change sysctl configuration file
+  template: src=performance/sysctl.conf.j2 dest=/etc/sysctl.d/99-wso2.conf owner=root group=root mode=0644
+  when: type == "worker"
+  
+- name: Change limits configuration file
+  template: src=performance/limits.conf.j2 dest=/etc/security/limits.d/99-wso2.conf owner=root group=root mode=0644
+  when: type == "worker"
+
+- name: Change synapse properties (Worker)
+  template: src=conf/synapse.properties.j2 dest={{ WSO2CarbonHome }}/repository/conf/synapse.properties owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+  when: type == "worker"
+
+- name: Change log4j properties (Worker)
+  template: src=conf/log4j.properties.j2 dest={{ WSO2CarbonHome }}/repository/conf/log4j.properties owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+  when: type == "worker"
+
+- name: Change passthru properties (Worker)
+  template: src=conf/passthru-http.properties.j2 dest={{ WSO2CarbonHome }}/repository/conf/passthru-http.properties owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+  when: type == "worker"
+#
+- name: Restart server
+  shell: reboot
+  when: restart
+
+- name: Wait for server to come up
+  local_action: wait_for host={% if ansible_ssh_host is defined %}{{ ansible_ssh_host }}{% else %}{{ inventory_hostname }}{% endif %} port=22 delay=30
+  sudo: false
+  when: restart
+#
+#
+# EOF: profitbricks-esb-dev/roles/esb/tasks/4.machine.yml

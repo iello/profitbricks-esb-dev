@@ -1,0 +1,31 @@
+---
+#
+firewall_allowed_tcp_ports:
+# SSH
+  - "22"
+# Apache
+  - "80"
+  - "443"
+# WSO2
+  - "8280"
+  - "8243"
+# JMX
+  - "9999"
+  - "11111"  
+# WSO2 Cluster communication ports
+# ELB
+  - "4000"
+# Enterprise Service Bus
+  - "4100"
+  - "4101"
+  - "4102"
+  - "4103"
+# Identity Server
+  - "4200"
+  - "4201"
+  - "4202"
+# Data Analytics Server
+  - "4300"
+  - "4301"
+  - "4302"
+

@@ -1,0 +1,29 @@
+# By default, This file contains the secret alias names and the plain text passwords enclosed with '[]' brackets
+# In Production environments, It is recommend to replace these plain text password by the encrypted values. CipherTool can be used for it.
+#
+# carbon.xml
+Carbon.Security.KeyStore.Password=[{{ KeystorePassword }}]
+Carbon.Security.KeyStore.KeyPassword=[{{ KeyPassword }}]
+#Carbon.Security.RegistryKeyStore.Password=[{{ RegKeystorePassword }}]
+#Carbon.Security.RegistryKeyStore.KeyPassword=[{{ RegKeyPassword }}]
+Carbon.Security.TrustStore.Password=[{{ TrustStorePassNew }}]
+
+# user-mgt.xml
+UserManager.AdminUser.Password=[{{ AdminPassword }}]
+
+# datasources/master-datasources.xml
+Datasources.WSO2_CARBON_DB.Configuration.Password=[{{ LocalRegistryPass }}]
+Datasources.WSO2_USER_STORE_DB.Configuration.Password=[{{ DatabaseUserstorePass }}]
+Datasources.REGISTRY_DB.Configuration.Password=[{{ DatabaseRegistryPass }}]
+
+# tomcat/catalina-server.xml
+Server.Service.Connector.keystorePass=[{{ KeystorePassword }}]
+
+# axis2/axis2.xml
+Axis2.Https.Listener.TrustStore.Password=[{{ TrustStorePassNew }}]
+Axis2.Https.Listener.KeyStore.Password=[{{ KeystorePassword }}]
+Axis2.Https.Listener.KeyStore.KeyPassword=[{{ KeyPassword }}]
+
+Axis2.Https.Sender.TrustStore.Password=[{{ TrustStorePassNew }}]
+Axis2.Https.Sender.KeyStore.Password=[{{ KeystorePassword }}]
+Axis2.Https.Sender.KeyStore.KeyPassword=[{{ KeyPassword }}]

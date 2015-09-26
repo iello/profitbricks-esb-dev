@@ -1,0 +1,59 @@
+---
+# ----------------------------------------------------------------------------
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+#
+#  ------------------------- Created by -------------------------------------- 
+#
+#  Name: Gabriel Popa
+#  Company: Iello-Dev srl
+#  Country: Romania 
+#  Email: contact@iello.ro
+#
+#
+# ----------------------------------------------------------------------------
+#
+- name: Install expect for secure vault install automation
+  apt: name=expect update_cache=yes state=latest
+
+- name: Unarchive WSO2 ESB to /usr/lib/wso2esb-4.9.0
+  unarchive: src={{ WSO2Archive }} dest={{ WSO2CarbonTarget }}
+
+- name: Create necessary symbolic link
+  file: src={{ WSO2CarbonDirectory }} dest={{ WSO2CarbonHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=link force=yes
+
+- name: Copy OJDBC driver
+  copy: src=ojdbc7.jar dest={{ WSO2CarbonHome }}/repository/components/lib/ owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+
+- name: Copy SVN deployment syncronization JAR's (1)
+  copy: src=svnkit-all-1.8.7.wso2v1.jar dest={{ WSO2CarbonHome }}/repository/components/dropins/ owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+
+- name: Copy SVN deployment syncronization JAR's (2)
+  copy: src=trilead-ssh2-1.0.0-build215.jar dest={{ WSO2CarbonHome }}/repository/components/lib/ owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+
+- name: Create startup service
+  template: src=services/wso2server.j2 dest=/etc/init.d/{{ WSO2Service }} owner=root group=root mode=0755
+  ignore_errors: true
+
+- name: Ensure WSO2 service is enabled for startup
+  service: name={{ WSO2Service }} enabled=yes
+#
+# And finally:
+# Every wso2 instance should have a unique local registry database name, so change it when configuring the product after installation
+- name: Change H2 database name (1)
+  command: creates="{{ WSO2CarbonHome }}/repository/database/wso2_n{{ node }}_{{ Environment|replace(".", "_") }}_db".h2.db mv {{ WSO2CarbonHome }}/repository/database/WSO2CARBON_DB.h2.db "{{ WSO2CarbonHome }}/repository/database/wso2_n{{ node }}_{{ Environment|replace(".", "_") }}_db".h2.db
+# - - - - - - - - - - - - - - - - - - - -
+#
+#
+# EOF: profitbricks-esb-dev/roles/esb/tasks/2.install.yml  

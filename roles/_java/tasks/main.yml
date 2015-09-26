@@ -1,0 +1,89 @@
+---
+# ----------------------------------------------------------------------------
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+#
+#  ------------------------- Created by -------------------------------------- 
+#
+#  Name: Gabriel Popa
+#  Company: Iello-Dev srl
+#  Country: Romania 
+#  Email: contact@iello.ro
+#
+#
+# ----------------------------------------------------------------------------
+#
+# Create wso2 group
+- group: name={{ WSO2Group }} state=present
+# Create wso2 user
+- user: name={{ WSO2Owner }} shell=/bin/bash group={{ WSO2Group }} append=yes system=yes createhome=yes
+
+- name: Create wso2 folder
+  file: state=directory path={{ WSO2CarbonTarget }} owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+  ignore_errors: true
+
+- name: Delete any previous java
+  shell: rm -rf {{ java_location }}/*
+
+- name: Create Java folder
+  file: state=directory path={{ java_location }}
+  ignore_errors: true
+
+- name: Create Java systemPrefs folder
+  file: state=directory path=/etc/.java/.systemPrefs owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+  ignore_errors: true
+
+- name: Unarchive java archive
+  unarchive: src={{ java_archive }} dest={{ java_location }}
+  register: jdk_installed
+
+- name: Make Java available for system
+  command: 'update-alternatives --install /bin/java java {{ java_home }}/bin/java 0'
+  when: jdk_installed|changed
+
+- name: Create environment variables setup 
+  template: src=java.sh.j2 dest=/etc/profile.d/java.sh owner=root group=root mode=0755
+  when: jdk_installed|changed
+
+- name: Java environment variables setup
+  shell: >
+    executable=/bin/bash source /etc/profile.d/java.sh;
+
+- name: Check Java directory existence
+  command: 'test -d {{ java_home }}'
+  register: java_folder_exists
+  ignore_errors: true
+
+- name: Install JCE (1)
+  copy: src=local_policy.jar dest={{ java_home }}/jre/lib/security/local_policy.jar owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+  when: java_folder_exists|success
+
+- name: Install JCE (2)
+  copy: src=US_export_policy.jar dest={{ java_home }}/jre/lib/security/US_export_policy.jar owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+  when: java_folder_exists|success
+
+- name: Restart server
+  shell: reboot
+
+- name: Wait for server to come up
+  local_action: wait_for host={% if ansible_ssh_host is defined %}{{ ansible_ssh_host }}{% else %}{{ inventory_hostname }}{% endif %} port=22 delay=30
+
+- name: Print Java version
+  command: java -version
+  register: version
+
+- debug: msg="{{ version.stderr }}"
+#
+#
+# EOF: profitbricks-esb-dev/roles/_java/tasks/main.yml
