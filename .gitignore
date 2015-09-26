@@ -1,0 +1,20 @@
+## generic files to ignore
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+
+=======
+# Mac OS X
+*.DS_Store
+
+# Archives
+*.zip
+jdk*.tar.gz
+
+========
+
+## Sensitive
+group_vars/all.yml
+group_vars/ESB.yml
