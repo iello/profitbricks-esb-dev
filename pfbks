@@ -22,25 +22,5 @@
 #
 # ----------------------------------------------------------------------------
 #
-[LB]
-lb.dev.iello.ro		ansible_ssh_host=10.13.42.15	ansible_connection=ssh	ansible_ssh_user=root
-
-[SVN]
-svn.dev.iello.ro	ansible_ssh_host=10.13.42.16	ansible_connection=ssh	ansible_ssh_user=root
-
-[ESB]
-n1.dev.iello.ro		ansible_ssh_host=10.13.42.12	ansible_connection=ssh	ansible_ssh_user=root 	type=manager 	node=1
-n2.dev.iello.ro		ansible_ssh_host=10.13.42.13	ansible_connection=ssh	ansible_ssh_user=root 	type=worker 	node=2
-n3.dev.iello.ro		ansible_ssh_host=10.13.42.14	ansible_connection=ssh	ansible_ssh_user=root 	type=worker 	node=3
-
-[ORACLE]
-oracle.dev.iello.ro		ansible_ssh_host=10.13.42.17	ansible_connection=ssh	ansible_ssh_user=root
-
-[PRQ]
-server1		ansible_ssh_host=10.13.42.12	ansible_connection=ssh	ansible_ssh_user=root
-server2		ansible_ssh_host=10.13.42.13	ansible_connection=ssh	ansible_ssh_user=root
-server3		ansible_ssh_host=10.13.42.14	ansible_connection=ssh	ansible_ssh_user=root
-
-#
-#
-# EOF: profitbricks-esb-dev/hosts
+[local]
+localhost

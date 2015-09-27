@@ -1,3 +1,4 @@
+---
 # ----------------------------------------------------------------------------
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,27 +21,21 @@
 #  Country: Romania 
 #  Email: contact@iello.ro
 #
+#
 # ----------------------------------------------------------------------------
 #
-[LB]
-lb.dev.iello.ro		ansible_ssh_host=10.13.42.15	ansible_connection=ssh	ansible_ssh_user=root
-
-[SVN]
-svn.dev.iello.ro	ansible_ssh_host=10.13.42.16	ansible_connection=ssh	ansible_ssh_user=root
-
-[ESB]
-n1.dev.iello.ro		ansible_ssh_host=10.13.42.12	ansible_connection=ssh	ansible_ssh_user=root 	type=manager 	node=1
-n2.dev.iello.ro		ansible_ssh_host=10.13.42.13	ansible_connection=ssh	ansible_ssh_user=root 	type=worker 	node=2
-n3.dev.iello.ro		ansible_ssh_host=10.13.42.14	ansible_connection=ssh	ansible_ssh_user=root 	type=worker 	node=3
-
-[ORACLE]
-oracle.dev.iello.ro		ansible_ssh_host=10.13.42.17	ansible_connection=ssh	ansible_ssh_user=root
-
-[PRQ]
-server1		ansible_ssh_host=10.13.42.12	ansible_connection=ssh	ansible_ssh_user=root
-server2		ansible_ssh_host=10.13.42.13	ansible_connection=ssh	ansible_ssh_user=root
-server3		ansible_ssh_host=10.13.42.14	ansible_connection=ssh	ansible_ssh_user=root
-
-#
-#
-# EOF: profitbricks-esb-dev/hosts
+- profitbricks:
+    datacenter: WSO2 ESB Development
+    instance_ids:
+      - 'SVN/Deploy Server'
+      - 'nGinx Server'
+      - 'Oracle DB Server'
+      - 'ESB Manager'
+      - 'ESB Worker 1'
+      - 'ESB Worker 2'
+      - 'Active MQ Server'
+      - 'MariaDB 1 Server'
+      - 'MariaDB 2 Server'
+    wait_timeout: 500
+    state: {{ state }}
+    when: all
