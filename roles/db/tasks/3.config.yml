@@ -24,48 +24,37 @@
 #
 # ----------------------------------------------------------------------------
 #
-  - name: Install Prerequisites
-    hosts: '{{ hosts | default("PRQ") }}'
+- name: Stop mysql server if started
+  service: name=mysql state=stopped
+  ignore_errors: true
 
-    roles:
-      - _java
-#      - _firewall
-    tags:
-      - PRQ
+- name: Copy config file
+  template: src=server.cnf.j2 dest=/etc/mysql/conf.d/cluster.cnf owner=root group=root mode=0755
 
-  - name: Install SVN Server
-    hosts: '{{ hosts | default("SVN") }}'
+- name: Start first node
+  command: service mysql start --wsrep-new-cluster
+  when: instance == 1
 
-    roles:
-      - svn
-    tags:
-      - SVN
+- name: Wait
+  wait_for: timeout=60
 
-  - name: Install Balancer
-    hosts: '{{ hosts | default("LB") }}'
+- name: Copy debian.conf from first node
+  fetch: src=/etc/mysql/debian.cnf dest=/tmp/ flat=yes
+  when: instance == 1
 
-    roles:
-      - lb
-    tags:
-      - LB
+- name: Wait
+  wait_for: timeout=5
 
-  - name: Install Database Cluster
-    hosts: '{{ hosts | default("DB") }}'
+- name: Copy debian.conf to second node
+  copy: src=/tmp/debian.cnf dest=/etc/mysql/ owner=root group=root mode=0755
+  when: instance == 2
 
-    roles:
-      - db
+- name: Start mysql server if not started
+  service: name=mysql state=started
+  when: instance == 2
 
-    tags:
-      - DB
-
-  - name: Install Enterprise Service Bus
-    hosts: '{{ hosts | default("ESB") }}'
-
-    roles:
-      - esb
-
-    tags:
-      - ESB
+- name: Wait
+  wait_for: timeout=5
 #
 #
-# EOF: profitbricks-esb-dev/install.yml
+# EOF: profitbricks-esb-dev/roles/maria/tasks/3.config.yml

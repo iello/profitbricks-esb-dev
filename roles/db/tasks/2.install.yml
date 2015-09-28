@@ -1,0 +1,114 @@
+---
+# ----------------------------------------------------------------------------
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+#
+#  ------------------------- Created by -------------------------------------- 
+#
+#  Name: Gabriel Popa
+#  Company: Iello-Dev srl
+#  Country: Romania 
+#  Email: contact@iello.ro
+#
+#
+# ----------------------------------------------------------------------------
+#
+- group: name={{ MySQLGroup }} state=present system=yes
+- user: name={{ MySQLOwner }} shell=/bin/bash group={{ MySQLGroup }} append=yes system=yes createhome=no
+
+- name: Ensure packages are installed
+  apt: name={{ item }} state=latest force=yes
+  with_items:
+    - ntp
+    - ntpdate
+    - libaio1
+    - libaio-dev
+    - build-essential
+    - python-pycurl
+    - perl
+    - python-software-properties
+    - python-mysqldb
+    - libmariadbclient18 
+    - libmysqlclient18 
+    - mariadb-common 
+    - mysql-common
+    - software-properties-common
+
+- name: Add apt key
+  apt_key: id=0xcbcb082a1bb943db keyserver=hkp://keyserver.ubuntu.com:80 state=present
+
+- name: Add MariaDB repository
+  apt_repository: repo='deb http://mirror.vpsfree.cz/mariadb/repo/5.5/ubuntu trusty main' state=present update_cache=yes
+
+- name: Ensure MariaDB Galera Cluster packages are installed
+  apt: name={{ item }} state=present force=yes
+  with_items:
+    - rsync 
+    - galera-3 
+    - mariadb-galera-server
+
+- name: Start mysql server if not started
+  service: name=mysql state=started
+  ignore_errors: true
+
+# 'localhost' needs to be the last item for idempotency, see
+# http://ansible.cc/docs/modules.html#mysql-user   
+- name: Update Mysql Root Password
+  mysql_user: name=root
+              host={{ item }}
+              password={{ MySQLRootPassword }}
+              login_user=root
+              login_password=''
+              priv=*.*:ALL,GRANT
+              state=present
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: Ensure anonymous users are not in the database
+  mysql_user: login_user=root 
+              login_password={{ MySQLRootPassword }}
+              name=''
+              host={{ item }}
+              state=absent
+  with_items:
+    - 127.0.0.1
+    - localhost
+
+- name: Remove the test database
+  mysql_db: login_user=root 
+            login_password={{ MySQLRootPassword }}
+            name=test
+            state=absent
+
+- name: Create Galera synchronization configuration User - State Transfer Snapshot (SST) (1)
+  mysql_user: login_user=root login_password={{ MySQLRootPassword }} name={{ MySQLSSTUser }} password={{ MySQLSSTPassword }} host={{ item }} priv=*.*:ALL,GRANT state=present
+  with_items:
+    - localhost
+
+- name: Copy config file
+  template: src=my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0755
+
+- name: Reload privilege tables
+  command: 'mysql -ne "{{ item }}"'
+  with_items:
+    - FLUSH PRIVILEGES
+  changed_when: False
+
+- name: Creates log directory
+  file: path=/var/log/mysql state=directory owner={{ MySQLOwner }} group={{ MySQLGroup }} recurse=yes mode=0777
+#
+#
+# EOF: profitbricks-esb-dev/roles/maria/tasks/2.install.yml

@@ -24,48 +24,13 @@
 #
 # ----------------------------------------------------------------------------
 #
-  - name: Install Prerequisites
-    hosts: '{{ hosts | default("PRQ") }}'
+us_mysql_privileges:
+  - '{{ DB4IS }}.*:ALL'
+  - '*.*:SUPER,RELOAD,SHOW\ DATABASES'
 
-    roles:
-      - _java
-#      - _firewall
-    tags:
-      - PRQ
-
-  - name: Install SVN Server
-    hosts: '{{ hosts | default("SVN") }}'
-
-    roles:
-      - svn
-    tags:
-      - SVN
-
-  - name: Install Balancer
-    hosts: '{{ hosts | default("LB") }}'
-
-    roles:
-      - lb
-    tags:
-      - LB
-
-  - name: Install Database Cluster
-    hosts: '{{ hosts | default("DB") }}'
-
-    roles:
-      - db
-
-    tags:
-      - DB
-
-  - name: Install Enterprise Service Bus
-    hosts: '{{ hosts | default("ESB") }}'
-
-    roles:
-      - esb
-
-    tags:
-      - ESB
+greg_mysql_privileges:
+  - '{{ DB4GREG }}.*:ALL'
+  - '*.*:SUPER,RELOAD,SHOW\ DATABASES'
 #
 #
-# EOF: profitbricks-esb-dev/install.yml
+# EOF: profitbricks-esb-dev/roles/maria/vars/main.yml

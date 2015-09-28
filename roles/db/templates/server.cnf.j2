@@ -1,0 +1,67 @@
+#
+# These groups are read by MariaDB server.
+# Use it for options that only the server (but not clients) should see
+#
+# See the examples of server my.cnf files in /usr/share/mysql/
+#
+
+# this is read by the standalone daemon and embedded servers
+[server]
+sql-mode="STRICT_ALL_TABLES"
+general_log_file=/var/log/mysql/mysqld.log
+general_log=1
+log_warning=2
+log-error=/var/log/mysql/error.log
+slow-query-log=1
+slow-query-log-file=/var/log/mysql/mysql-slow.log
+
+# > > > > mysql settings > > > > 
+[mysqld]
+#settings of mysql 
+character-set-server=utf8
+collation-server=utf8_general_ci
+binlog_format=ROW
+default-storage-engine=innodb
+innodb_autoinc_lock_mode=2
+innodb_locks_unsafe_for_binlog=1
+query_cache_size=0
+query_cache_type=0
+bind-address=0.0.0.0
+
+datadir={{ DataDirectory }}
+innodb_file_per_table
+innodb_flush_log_at_trx_commit=2
+#
+
+# this is only for embedded server
+[embedded]
+
+# This group is only read by MariaDB servers, not by MySQL.
+# If you use the same .cnf file for MySQL and MariaDB,
+# you can put MariaDB-only options here
+#
+[mariadb]
+# > > > > galera settings > > > > 
+# Galera Provider Configuration
+wsrep_provider=/usr/lib/galera/libgalera_smm.so
+
+# Galera Cluster Configuration
+{% if instance == 1 %}
+wsrep_cluster_address="gcomm://"
+{% else %}
+wsrep_cluster_address="gcomm://{% for host in groups['MARIA'] -%}{{ hostvars[host]['ansible_ssh_host'] }}{% if not loop.last -%},{% endif -%}{% endfor -%}?pc.wait_prim=no"
+{% endif %}
+wsrep_cluster_name='galera_cluster'
+
+# Galera Node Configuration
+wsrep_node_address='{{ ansible_eth0['ipv4']['address'] }}'
+wsrep_node_name='node{{ instance }}'
+
+# Galera Synchronization Configuration
+wsrep_sst_method=rsync
+wsrep_sst_auth={{ MySQLSSTUser }}:{{ MySQLSSTPassword }}
+#
+# This group is only read by MariaDB-10.0 servers.
+# If you use the same .cnf file for MariaDB of different versions,
+# use this group for options that older servers don't understand
+[mariadb-10.0]
