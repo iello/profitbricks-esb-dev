@@ -44,9 +44,9 @@ n1.db.dev.iello.ro		ansible_ssh_host=10.15.78.16	ansible_connection=ssh	ansible_
 n2.db.dev.iello.ro		ansible_ssh_host=10.15.78.15	ansible_connection=ssh	ansible_ssh_user=root	instance=2
 
 [PRQ]
-server1		ansible_ssh_host=10.13.42.12	ansible_connection=ssh	ansible_ssh_user=root
-server2		ansible_ssh_host=10.13.42.13	ansible_connection=ssh	ansible_ssh_user=root
-server3		ansible_ssh_host=10.13.42.14	ansible_connection=ssh	ansible_ssh_user=root
+server1		ansible_ssh_host=10.15.78.13	ansible_connection=ssh	ansible_ssh_user=root
+server2		ansible_ssh_host=10.15.78.14	ansible_connection=ssh	ansible_ssh_user=root
+server3		ansible_ssh_host=10.15.78.17	ansible_connection=ssh	ansible_ssh_user=root
 
 #
 #
