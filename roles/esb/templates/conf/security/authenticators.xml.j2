@@ -28,16 +28,16 @@
     </Authenticator>
 
     <!-- Authenticator Configurations for SAML2SSOAuthenticator -->
-    <Authenticator name="SAML2SSOAuthenticator" disabled="{% if type == 'manager' -%}{{ DisableSSO }}{% else -%}true{% endif -%}">
+    <Authenticator name="SAML2SSOAuthenticator" disabled="true">
         <Priority>10</Priority>
         <Config>
             <Parameter name="LoginPage">/carbon/admin/login.jsp</Parameter>
-            <Parameter name="ServiceProviderID">{{ ServiceProviderID }}</Parameter>
-            <Parameter name="IdentityProviderSSOServiceURL">{{ IdentityProviderSSOServiceURL }}</Parameter>
+            <!--Parameter name="ServiceProviderID">localhost</Parameter>
+            <Parameter name="IdentityProviderSSOServiceURL">localhost</Parameter>
             <Parameter name="NameIDPolicyFormat">urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</Parameter>
 
-            <Parameter name="IdPCertAlias">{{ IdPCertAlias }}</Parameter>
-            <Parameter name="VerifySignatureWithUserDomain">true</Parameter>
+            <Parameter name="IdPCertAlias">idp</Parameter>
+            <Parameter name="VerifySignatureWithUserDomain">true</Parameter-->
             <!-- <Parameter name="ResponseSignatureValidationEnabled">false</Parameter> -->
             <!-- <Parameter name="LoginAttributeName"></Parameter> -->
             <!-- <Parameter name="RoleClaimAttribute"></Parameter> -->
