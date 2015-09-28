@@ -30,6 +30,9 @@
 
 - lineinfile: dest=/etc/hosts regexp='.*{{ inventory_hostname }}$' insertafter="^127\.0\.0\.1(.*)localhost" line="{{ ansible_eth0['ipv4']['address'] }} {{ inventory_hostname }}" state=present
 
+- name: Ensure nginx-plus service is enabled for startup
+  service: name=nginx enabled=yes state=started
+
 - name: Restart server
   shell: reboot
   when: restart

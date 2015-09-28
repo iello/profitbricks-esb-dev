@@ -59,9 +59,6 @@
     - expect
     - nginx-plus
     - nginx-ha-keepalived
-
-- name: Ensure nginx-plus service is enabled for startup
-  service: name=nginx enabled=yes state=started
 #
 #
 # EOF profitbricks-esb-dev/roles/lb/tasks/2.install.yml
