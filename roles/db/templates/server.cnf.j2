@@ -49,7 +49,7 @@ wsrep_provider=/usr/lib/galera/libgalera_smm.so
 {% if instance == 1 %}
 wsrep_cluster_address="gcomm://"
 {% else %}
-wsrep_cluster_address="gcomm://{% for host in groups['MARIA'] -%}{{ hostvars[host]['ansible_ssh_host'] }}{% if not loop.last -%},{% endif -%}{% endfor -%}?pc.wait_prim=no"
+wsrep_cluster_address="gcomm://{% for host in groups['DB'] -%}{{ hostvars[host]['ansible_ssh_host'] }}{% if not loop.last -%},{% endif -%}{% endfor -%}?pc.wait_prim=no"
 {% endif %}
 wsrep_cluster_name='galera_cluster'
 
