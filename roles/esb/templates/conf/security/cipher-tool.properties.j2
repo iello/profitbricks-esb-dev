@@ -23,10 +23,10 @@ Datasources.REGISTRY_DB.Configuration.Password=repository/conf/datasources/maste
 Server.Service.Connector.keystorePass=repository/conf/tomcat/catalina-server.xml//Server/Service/Connector[@keystorePass],true
 
 # axis2/axis2.xml
-Axis2.Https.Listener.TrustStore.Password=axis2.xml//axisconfig/transportReceiver[@name='https']/parameter[@name='truststore']/TrustStore/Password,false
-Axis2.Https.Listener.KeyStore.Password=axis2.xml//axisconfig/transportReceiver[@name='https']/parameter[@name='keystore']/KeyStore/Password,false
-Axis2.Https.Listener.KeyStore.KeyPassword=axis2.xml//axisconfig/transportReceiver[@name='https']/parameter[@name='keystore']/KeyStore/KeyPassword,false
+Axis2.Https.Listener.TrustStore.Password=repository/conf/axis2/axis2.xml//axisconfig/transportReceiver[@name='https']/parameter[@name='truststore']/TrustStore/Password,false
+Axis2.Https.Listener.KeyStore.Password=repository/conf/axis2/axis2.xml//axisconfig/transportReceiver[@name='https']/parameter[@name='keystore']/KeyStore/Password,false
+Axis2.Https.Listener.KeyStore.KeyPassword=repository/conf/axis2/axis2.xml//axisconfig/transportReceiver[@name='https']/parameter[@name='keystore']/KeyStore/KeyPassword,false
 
-Axis2.Https.Sender.TrustStore.Password=axis2.xml//axisconfig/transportSender[@name='https']/parameter[@name='truststore']/TrustStore/Password,false
-Axis2.Https.Sender.KeyStore.Password=axis2.xml//axisconfig/transportSender[@name='https']/parameter[@name='keystore']/KeyStore/Password,false
-Axis2.Https.Sender.KeyStore.KeyPassword=axis2.xml//axisconfig/transportSender[@name='https']/parameter[@name='keystore']/KeyStore/KeyPassword,false
+Axis2.Https.Sender.TrustStore.Password=repository/conf/axis2/axis2.xml//axisconfig/transportSender[@name='https']/parameter[@name='truststore']/TrustStore/Password,false
+Axis2.Https.Sender.KeyStore.Password=repository/conf/axis2/axis2.xml//axisconfig/transportSender[@name='https']/parameter[@name='keystore']/KeyStore/Password,false
+Axis2.Https.Sender.KeyStore.KeyPassword=repository/conf/axis2/axis2.xml//axisconfig/transportSender[@name='https']/parameter[@name='keystore']/KeyStore/KeyPassword,false
