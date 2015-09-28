@@ -42,7 +42,7 @@ SQLIdentityDBName: '{{ DB4IS }}'
 # User Store database
 UserStoreDatasourceName: 'WSO2_USER_STORE_DB'
 UserStoreJndiConfig: 'WSO2UsersDB'
-DatabaseUserstoreURL: "jdbc:mariadb:failover://{% for host in groups['MARIA'] -%}{{ hostvars[host]['ansible_ssh_host'] }}{% if not loop.last -%},{% endif -%}{% endfor -%}/{{ SQLIdentityDBName }}"
+DatabaseUserstoreURL: "jdbc:mariadb:failover://{% for host in groups['DB'] -%}{{ hostvars[host]['ansible_ssh_host'] }}{% if not loop.last -%},{% endif -%}{% endfor -%}/{{ SQLIdentityDBName }}"
 DatabaseUserstoreUser: '{{ DB4ISUser }}'
 DatabaseUserstorePass: '{{ DB4ISPassword }}'
 DatabaseUserStoreDriver: 'org.mariadb.jdbc.Driver'
@@ -57,7 +57,7 @@ DatabaseLocalRegistryDriver: 'org.h2.Driver'
 # Registry
 RegistryInstanceid: '{{ Alias }}_instance'
 RegistryIdentifier: 'ESB'
-DatabaseRegistryURL: "jdbc:mariadb:failover://{% for host in groups['MARIA'] -%}{{ hostvars[host]['ansible_ssh_host'] }}{% if not loop.last -%},{% endif -%}{% endfor -%}/{{ SQLRegistryDBName }}"
+DatabaseRegistryURL: "jdbc:mariadb:failover://{% for host in groups['DB'] -%}{{ hostvars[host]['ansible_ssh_host'] }}{% if not loop.last -%},{% endif -%}{% endfor -%}/{{ SQLRegistryDBName }}"
 DatabaseRegistryUser: '{{ DB4GREGUser }}'
 DatabaseRegistryPass: '{{ DB4GREGPassword }}'
 DatabaseRegistryDriver: 'org.mariadb.jdbc.Driver'
