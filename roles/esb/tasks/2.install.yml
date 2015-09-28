@@ -33,8 +33,11 @@
 - name: Create necessary symbolic link
   file: src={{ WSO2CarbonDirectory }} dest={{ WSO2CarbonHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=link force=yes
 
-- name: Copy OJDBC driver
+- name: Copy OJDBC driver (Oracle)
   copy: src=ojdbc7.jar dest={{ WSO2CarbonHome }}/repository/components/lib/ owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+
+- name: Copy OJDBC driver (Maria DB)
+  copy: src=mariadb-java-client-1.2.0.jar dest={{ WSO2CarbonHome }}/repository/components/lib/ owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
 
 - name: Copy SVN deployment syncronization JAR's (1)
   copy: src=svnkit-all-1.8.7.wso2v1.jar dest={{ WSO2CarbonHome }}/repository/components/dropins/ owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
