@@ -18,3 +18,4 @@ jdk*.tar.gz
 ## Sensitive
 group_vars/all.yml
 group_vars/ESB.yml
+group_vars/DB.yml
