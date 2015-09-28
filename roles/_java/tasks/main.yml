@@ -29,6 +29,11 @@
 # Create wso2 user
 - user: name={{ WSO2Owner }} shell=/bin/bash group={{ WSO2Group }} append=yes system=yes createhome=yes
 
+- name: Ensure packages are installed
+  apt: name={{ item }} state=latest force=yes
+  with_items:
+    - unzip
+
 - name: Create wso2 folder
   file: state=directory path={{ WSO2CarbonTarget }} owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
   ignore_errors: true
