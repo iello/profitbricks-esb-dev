@@ -28,6 +28,7 @@
   template: src={{ item }}.j2 dest=/etc/nginx/conf.d/{{ item }} owner=root group=root mode=0755
   with_items:
     - _esb.conf
+    - _svn.conf
 
 - name: Copy certificates
   copy: src={{ item }} dest=/etc/nginx/ssl/ owner=root group=root mode=0755
