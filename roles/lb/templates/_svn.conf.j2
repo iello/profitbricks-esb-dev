@@ -4,9 +4,7 @@ upstream svn.{{ SessionName }}.{{ Domain }} {
     sticky cookie JSESSIONID;
 
     {% for host in groups[SessionName|upper] -%}
-    {% if hostvars[host]['type'] == "worker" -%}
     server {{ hostvars[host]['ansible_ssh_host'] }}:80;
-    {% endif -%}
     {% endfor %}    
 }
 
