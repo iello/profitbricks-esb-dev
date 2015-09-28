@@ -23,18 +23,25 @@
 # ----------------------------------------------------------------------------
 #
 [LB]
-lb.dev.iello.ro		ansible_ssh_host=10.13.42.15	ansible_connection=ssh	ansible_ssh_user=root
+lb.dev.iello.ro		ansible_ssh_host=10.15.78.12	ansible_connection=ssh	ansible_ssh_user=root
 
 [SVN]
-svn.dev.iello.ro	ansible_ssh_host=10.13.42.16	ansible_connection=ssh	ansible_ssh_user=root
+svn.dev.iello.ro	ansible_ssh_host=10.15.78.11	ansible_connection=ssh	ansible_ssh_user=root
 
 [ESB]
-n1.dev.iello.ro		ansible_ssh_host=10.13.42.12	ansible_connection=ssh	ansible_ssh_user=root 	type=manager 	node=1
-n2.dev.iello.ro		ansible_ssh_host=10.13.42.13	ansible_connection=ssh	ansible_ssh_user=root 	type=worker 	node=2
-n3.dev.iello.ro		ansible_ssh_host=10.13.42.14	ansible_connection=ssh	ansible_ssh_user=root 	type=worker 	node=3
+n1.dev.iello.ro		ansible_ssh_host=10.15.78.17	ansible_connection=ssh	ansible_ssh_user=root 	type=manager 	node=1
+n2.dev.iello.ro		ansible_ssh_host=10.15.78.13	ansible_connection=ssh	ansible_ssh_user=root 	type=worker 	node=2
+n3.dev.iello.ro		ansible_ssh_host=10.15.78.14	ansible_connection=ssh	ansible_ssh_user=root 	type=worker 	node=3
 
 [ORACLE]
-oracle.dev.iello.ro		ansible_ssh_host=10.13.42.17	ansible_connection=ssh	ansible_ssh_user=root
+oracle.dev.iello.ro		ansible_ssh_host=10.15.78.18	ansible_connection=ssh	ansible_ssh_user=root
+
+[MQ]
+mq.dev.iello.ro		ansible_ssh_host=10.15.78.19	ansible_connection=ssh	ansible_ssh_user=root
+
+[DB]
+n1.db.dev.iello.ro		ansible_ssh_host=10.15.78.15	ansible_connection=ssh	ansible_ssh_user=root 	node=1
+n2.db.dev.iello.ro		ansible_ssh_host=10.15.78.16	ansible_connection=ssh	ansible_ssh_user=root	node=2
 
 [PRQ]
 server1		ansible_ssh_host=10.13.42.12	ansible_connection=ssh	ansible_ssh_user=root
