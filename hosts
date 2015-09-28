@@ -40,8 +40,8 @@ oracle.dev.iello.ro		ansible_ssh_host=10.15.78.18	ansible_connection=ssh	ansible
 mq.dev.iello.ro		ansible_ssh_host=10.15.78.19	ansible_connection=ssh	ansible_ssh_user=root
 
 [DB]
-n1.db.dev.iello.ro		ansible_ssh_host=10.15.78.16	ansible_connection=ssh	ansible_ssh_user=root 	node=1
-n2.db.dev.iello.ro		ansible_ssh_host=10.15.78.15	ansible_connection=ssh	ansible_ssh_user=root	node=2
+n1.db.dev.iello.ro		ansible_ssh_host=10.15.78.16	ansible_connection=ssh	ansible_ssh_user=root 	instance=1
+n2.db.dev.iello.ro		ansible_ssh_host=10.15.78.15	ansible_connection=ssh	ansible_ssh_user=root	instance=2
 
 [PRQ]
 server1		ansible_ssh_host=10.13.42.12	ansible_connection=ssh	ansible_ssh_user=root
