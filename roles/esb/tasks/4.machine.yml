@@ -39,18 +39,18 @@
   shell: chown {{ WSO2Owner }}:{{ WSO2Group }} {{ WSO2CarbonHome }}
 
 # Secure Vault - - - - - - - - - - - - - - - - - - - - - - -
-- name: Run Secure Vault activation script
-  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/bin/ && ./run-ciphertool.sh'"
-  remote_user: "{{ WSO2Owner }}"
+# - name: Run Secure Vault activation script
+#   command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/bin/ && ./run-ciphertool.sh'"
+#   remote_user: "{{ WSO2Owner }}"
 
-- name: Run Secure Vault configuration script
-  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/bin/ && ./run-cipherconfigure.sh'"
+#- name: Run Secure Vault configuration script
+#  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/bin/ && ./run-cipherconfigure.sh'"
 # #
-- name: Delete the Secure Vault activation script file
-  shell: rm {{ WSO2CarbonHome }}/bin/run-ciphertool.sh
+# - name: Delete the Secure Vault activation script file
+#   shell: rm {{ WSO2CarbonHome }}/bin/run-ciphertool.sh
 
-- name: Delete the Secure Vault configuration script file
-  shell: rm {{ WSO2CarbonHome }}/bin/run-cipherconfigure.sh
+# - name: Delete the Secure Vault configuration script file
+#   shell: rm {{ WSO2CarbonHome }}/bin/run-cipherconfigure.sh
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 #
 # Change local registry database - H2 default wso2carbon user password
