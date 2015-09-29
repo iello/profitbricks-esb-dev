@@ -55,7 +55,7 @@
   template: src=daemon/activemq.j2 dest={{ MQHome }}/bin/linux-x86-64/activemq owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
 
 - name: Ensure MQ service is enabled for startup
-  service: name={{ MQService }} enabled=yes
+  service: name={{ MQService }} enabled=yes state=started
 
 - name: Verify machine hostname to be correctly set
   hostname: name={{ inventory_hostname }}
