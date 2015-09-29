@@ -47,6 +47,7 @@ n2.db.dev.iello.ro		ansible_ssh_host=10.15.78.15	ansible_connection=ssh	ansible_
 server1		ansible_ssh_host=10.15.78.13	ansible_connection=ssh	ansible_ssh_user=root
 server2		ansible_ssh_host=10.15.78.14	ansible_connection=ssh	ansible_ssh_user=root
 server3		ansible_ssh_host=10.15.78.17	ansible_connection=ssh	ansible_ssh_user=root
+server4		ansible_ssh_host=10.15.78.19	ansible_connection=ssh	ansible_ssh_user=root
 
 #
 #
