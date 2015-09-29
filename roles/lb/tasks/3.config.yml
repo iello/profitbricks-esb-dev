@@ -29,6 +29,7 @@
   with_items:
     - _esb.conf
     - _svn.conf
+    - _mq.conf
 
 - name: Copy certificates
   copy: src={{ item }} dest=/etc/nginx/ssl/ owner=root group=root mode=0755
