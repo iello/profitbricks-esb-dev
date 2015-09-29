@@ -66,6 +66,15 @@
 
     tags:
       - ESB
+
+  - name: Install Apache Active MQ
+    hosts: '{{ hosts | default("MQ") }}'
+
+    roles:
+      - mq
+
+    tags:
+      - MQ
 #
 #
 # EOF: profitbricks-esb-dev/install.yml

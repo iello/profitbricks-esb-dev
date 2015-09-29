@@ -27,23 +27,29 @@
 - name: Delete the MQ directory
   file: path={{ MQDirectory }} state=absent
   ignore_errors: true
+  when: fromScratch
 
 - name: Delete symlink
   file: path={{ MQHome }} state=absent
   ignore_errors: true
+  when: fromScratch
 
 - name: Delete startup script
   file: path=/etc/init.d/{{ MQService }} state=absent
   ignore_errors: true
+  when: fromScratch
 
 - name: Unarchive mq archive
   unarchive: src={{ MQArchive }} dest={{ MQTarget }} owner={{ WSO2Owner }} group={{ WSO2Group }}
+  when: fromScratch
 
 - name: Create necessary symbolic link
   file: src={{ MQDirectory }} dest={{ MQHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=link force=yes
+  when: fromScratch
 
 - name: Create necessary symbolic link
   file: src={{ MQDirectory }}/bin/linux-x86-64/activemq dest=/etc/init.d/{{ MQService }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=link force=yes
+  when: fromScratch
 
 - name: Change daemon file 
   template: src=daemon/activemq.j2 dest={{ MQHome }}/bin/linux-x86-64/activemq owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
@@ -53,9 +59,11 @@
 
 - name: Restart server
   shell: reboot
+  when: reboot
 
 - name: Wait for server to come up
   local_action: wait_for host={% if ansible_ssh_host is defined %}{{ ansible_ssh_host }}{% else %}{{ inventory_hostname }}{% endif %} port=22 delay=30
+  when: reboot
 #
 #
 # EOF: profitbricks-esb-dev/roles/mq/tasks/main.yml
