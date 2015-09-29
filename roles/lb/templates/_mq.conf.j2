@@ -1,15 +1,13 @@
 {% set SessionName = 'mq' -%}
 
 upstream {{ SessionName }}.{{ Domain }} {
-    sticky cookie JSESSIONID;
-
     {% for host in groups[SessionName|upper] -%}
-    server {{ hostvars[host]['ansible_ssh_host'] }}:61616;
-    {% endfor %}    
+    server {{ hostvars[host]['ansible_ssh_host'] }}:8161;
+    {% endfor -%}    
 }
 
 server {
-    listen 61616;
+    listen 8161;
     server_name {{ SessionName }}.{{ Environment }}{{ Domain }};
 
         location / {

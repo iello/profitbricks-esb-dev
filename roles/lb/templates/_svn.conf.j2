@@ -1,11 +1,9 @@
 {% set SessionName = 'svn' -%}
 
 upstream {{ SessionName }}.{{ Domain }} {
-    sticky cookie JSESSIONID;
-
     {% for host in groups[SessionName|upper] -%}
     server {{ hostvars[host]['ansible_ssh_host'] }}:80;
-    {% endfor %}    
+    {% endfor -%}    
 }
 
 server {
