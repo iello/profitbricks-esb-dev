@@ -57,6 +57,9 @@
 - name: Ensure MQ service is enabled for startup
   service: name={{ MQService }} enabled=yes state=started
 
+- name: Change installation directory ownership
+  file: path={{ MQDirectory }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=directory recurse=yes
+
 - name: Verify machine hostname to be correctly set
   hostname: name={{ inventory_hostname }}
 
