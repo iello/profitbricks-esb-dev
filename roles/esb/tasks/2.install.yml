@@ -45,6 +45,15 @@
 - name: Copy SVN deployment syncronization JAR's (2)
   copy: src=trilead-ssh2-1.0.0-build215.jar dest={{ WSO2CarbonHome }}/repository/components/lib/ owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
 
+- name: Copy Apache Active MQ libs
+  copy: src={{ item }} dest={{ WSO2CarbonHome }}/repository/components/lib/ owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+  with_items: 
+    - activemq-broker-5.12.0.jar 
+    - activemq-client-5.12.0.jar
+    - geronimo-j2ee-management_1.1_spec-1.0.1.jar
+    - geronimo-jms_1.1_spec-1.1.1.jar
+    - hawtbuf-1.2.jar
+
 - name: Create startup service
   template: src=services/wso2server.j2 dest=/etc/init.d/{{ WSO2Service }} owner=root group=root mode=0755
   ignore_errors: true
