@@ -34,7 +34,12 @@ n2.dev.iello.ro		ansible_ssh_host=10.15.78.13	ansible_connection=ssh	ansible_ssh
 n3.dev.iello.ro		ansible_ssh_host=10.15.78.14	ansible_connection=ssh	ansible_ssh_user=root 	type=worker 	node=3
 
 [MQ]
-mq.dev.iello.ro		ansible_ssh_host=10.15.78.19	ansible_connection=ssh	ansible_ssh_user=root
+n1.mq.dev.iello.ro		ansible_ssh_host=10.15.78.19	ansible_connection=ssh	ansible_ssh_user=root
+n2.mq.dev.iello.ro		ansible_ssh_host=10.15.78.18	ansible_connection=ssh	ansible_ssh_user=root
+
+[ES]
+n1.dev.iello.ro		ansible_ssh_host=10.15.78.13	ansible_connection=ssh	ansible_ssh_user=root 	node=1
+n2.dev.iello.ro		ansible_ssh_host=10.15.78.14	ansible_connection=ssh	ansible_ssh_user=root 	node=2
 
 [DB]
 n1.db.dev.iello.ro		ansible_ssh_host=10.15.78.16	ansible_connection=ssh	ansible_ssh_user=root 	instance=1
